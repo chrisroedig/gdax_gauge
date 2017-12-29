@@ -1,4 +1,4 @@
-import gdax_guage
+import gdax_gauge
 import threading
 from neopixel import *
 
@@ -40,6 +40,16 @@ class GDaxLed():
         self.set_pixels()
         threading.Timer(1.00, self.set_pixels_loop).start()
     def set_pixels(self):
-        for enumerate(i, color) in self.gdax_guage.combined_pixels():
+        for i, color in enumerate(self.gdax_guage.combined_pixels()):
             self.strip.setPixelColor(i, color)
         self.show()
+if __name__ == '__main__':
+    gdax_led = GDaxLed()
+    def signal_handler(signal, frame):
+        print('You pressed Ctrl+C!')
+        gdax_led.stop()
+        sys.exit(0)
+    signal.signal(signal.SIGINT, signal_handler)
+    gdax_led.start()
+    while True:
+        time.sleep(1)
